@@ -14,28 +14,8 @@ export default function UpdateProfile() {
   const [ loading, setLoading ] = useState(false)
   const { updateEmail, updatePassword, serverURL } = useAuth()
   const history = useHistory()
-  const { currentUser } = useAuth()
-  const [ gender, setGender ] = useState('')
-  let first, last, birthday
-
-  fetch(`${serverURL()}/users/user`, {
-    credentials: 'include',
-    method: 'GET',
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json;charset=UTF-8"
-    }
-  }).then(response => response.json())
-  .then(data => {
-    console.log(data)
-    try {
-      first= data.first
-      last = data.last
-      birthday = data.birthday
-    } catch{}
-    setGender(data.gender)
-  })
-
+  const { currentUser, updateUserData, userData } = useAuth()
+  const [ gender, setGender ] = useState(userData.gender)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -64,6 +44,7 @@ export default function UpdateProfile() {
         birthday
       })
     }).then(() => {
+      updateUserData({gender, first, last, birthday})
       const promises = []
       if (emailRef.current.value !== currentUser.email) {
         promises.push(updateEmail(emailRef.current.value))
@@ -72,14 +53,22 @@ export default function UpdateProfile() {
       if (passwordRef.current.value) {
         promises.push(updatePassword(passwordRef.current.value))
       }
-      Promise.all(promises).then(() => {}).catch(() => {})
-      history.push("/")
+      Promise.all(promises).then(() => {
+        history.push("/")
+      })
+      .catch(() => {})
+      
     }).catch(() => {
       setError("Failed to update profile. Try logging out and trying again.")
     }).finally(() => {
       setLoading(false)
     })
 
+  }
+
+  function changeOption(e) {
+    setGender(e.currentTarget.value)
+    setGender(e.currentTarget.value)
   }
 
   return (
@@ -94,13 +83,13 @@ export default function UpdateProfile() {
           <label>Confirm Password</label>
           <input type="password" ref={passwordConfirmRef} placeholder="Leave blank to keep the same"></input>
           <label>First Name</label>
-          <input type="text" defaultValue={first} ref={firstRef} required></input>
+          <input type="text" defaultValue={userData.first} ref={firstRef} required></input>
           <label>Last Name</label>
-          <input type="text" defaultValue={last} ref={lastRef} required></input>
+          <input type="text" defaultValue={userData.last} ref={lastRef} required></input>
           <label>Birthday</label>
-          <input type="date" defaultValue={birthday} ref={birthdayRef} required></input>
+          <input type="date" defaultValue={userData.birthday} ref={birthdayRef} required></input>
           <label>Gender</label>
-          <select defaultValue="no_choice" onChange={e => setGender(e.currentTarget.value)}>
+          <select defaultValue={userData.gender} onChange={e => changeOption(e)}>
             <option value="no_choice" disabled>Choose Gender</option>
             <option value="Woman">Woman</option>
             <option value="Prefer not to say">Prefer not to say</option>

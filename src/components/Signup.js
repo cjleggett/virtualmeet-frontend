@@ -13,7 +13,7 @@ export default function Signup() {
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ gender, setGender ] = useState('')
-  const { signup, serverURL } = useAuth()
+  const { signup, serverURL, updateUserData } = useAuth()
   const history = useHistory()
 
   async function handleSubmit(e) {
@@ -52,6 +52,8 @@ export default function Signup() {
             last,
             birthday
           })
+        }).then(() => {
+          updateUserData({gender, first, last, birthday})
         })
       })
 

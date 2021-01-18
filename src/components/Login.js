@@ -8,7 +8,7 @@ export default function Login() {
   const passwordRef = useRef()
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const { login, serverURL } = useAuth()
+  const { login, serverURL, updateUserData } = useAuth()
   const history = useHistory()
 
   async function handleSubmit(e) {
@@ -31,7 +31,9 @@ export default function Login() {
             "Content-Type": "application/json;charset=UTF-8"
           },
           body: JSON.stringify({idToken})
-        }).then()
+        }).then(res => res.json()).then(data => {
+          updateUserData(data)
+        })
         .catch()
       }).catch()
       
