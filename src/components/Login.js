@@ -8,16 +8,32 @@ export default function Login() {
   const passwordRef = useRef()
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const { login } = useAuth()
+  const { login, serverURL } = useAuth()
   const history = useHistory()
 
   async function handleSubmit(e) {
     e.preventDefault()
 
     try {
+
+      // Log in user using firebase auth
       setError('')
       setLoading(true)
-      await login(emailRef.current.value, passwordRef.current.value)
+      const res = await login(emailRef.current.value, passwordRef.current.value)
+
+      // Once User is logged in, begin a session in the backend:
+      res.user.getIdToken(true).then(function(idToken) {
+        fetch(`${serverURL()}/auth/login`, {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          body: JSON.stringify({idToken})
+        }).then()
+        .catch()
+      }).catch()
+      
     } catch(e) {
       setError('Failed to log in')
       setLoading(false)
