@@ -7,6 +7,8 @@ export function useAuth() {
   return useContext(AuthContext)
 }
 
+const SERVER_URL = "http://localhost:5000"
+
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState()
   const [loading, setLoading] = useState(true)
@@ -36,7 +38,7 @@ export function AuthProvider({ children }) {
   }
 
   function serverURL() {
-    return "http://localhost:5000"
+    return SERVER_URL
   }
 
   useEffect(() => {

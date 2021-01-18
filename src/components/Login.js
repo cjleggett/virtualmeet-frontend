@@ -24,6 +24,7 @@ export default function Login() {
       // Once User is logged in, begin a session in the backend:
       res.user.getIdToken(true).then(function(idToken) {
         fetch(`${serverURL()}/auth/login`, {
+          credentials: 'include',
           method: "POST",
           headers: {
             "Accept": "application/json",

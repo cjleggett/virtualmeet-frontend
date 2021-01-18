@@ -39,6 +39,7 @@ export default function Signup() {
         
         // Add new user info to database
         fetch(`${serverURL()}/auth/signup`, {
+          credentials: 'include',
           method: "POST",
           headers: {
             "Accept": "application/json",
