@@ -14,6 +14,7 @@ export default function Dashboard() {
 
     // Terminate session on backend
     fetch(`${serverURL()}/auth/logout`, {
+      credentials: "include",
       method: "POST",
       headers: {
         "Accept": "application/json",
