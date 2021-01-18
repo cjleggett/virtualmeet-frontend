@@ -23,7 +23,6 @@ export function AuthProvider({ children }) {
   }
 
   function updateUserData(data) {
-    console.log(data)
     setUserData(data)
   }
 

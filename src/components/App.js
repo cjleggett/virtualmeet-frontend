@@ -11,6 +11,8 @@ import Login from "./Login"
 import ForgotPassword from "./ForgotPassword"
 import PrivateRoute from "./PrivateRoute"
 import UpdateProfile from "./UpdateProfile"
+import AddTeam from "./AddTeam"
+import JoinTeam from "./JoinTeam"
 
 class App extends React.Component {
   render() {
@@ -19,7 +21,9 @@ class App extends React.Component {
         <AuthProvider>
           <Switch>
             <PrivateRoute exact path="/" component={Dashboard}/>
-            <PrivateRoute exact path="/update-profile" component={UpdateProfile}/>
+            <PrivateRoute path="/update-profile" component={UpdateProfile}/>
+            <PrivateRoute path="/add-team" component={AddTeam}/>
+            <PrivateRoute path="/join-team" component={JoinTeam}/>
             <Route path="/signup" component={Signup}/>
             <Route path="/login" component={Login}/>
             <Route path="/forgot-password" component={ForgotPassword}/>

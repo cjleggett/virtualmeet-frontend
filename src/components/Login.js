@@ -33,6 +33,7 @@ export default function Login() {
           body: JSON.stringify({idToken})
         }).then(res => res.json()).then(data => {
           updateUserData(data)
+          history.push('/')
         })
         .catch()
       }).catch()
@@ -42,7 +43,6 @@ export default function Login() {
       setLoading(false)
       return
     }
-    history.push('/')
 
   }
 

@@ -54,6 +54,7 @@ export default function Signup() {
           })
         }).then(() => {
           updateUserData({gender, first, last, birthday})
+          history.push('/')
         })
       })
 
@@ -63,7 +64,6 @@ export default function Signup() {
       setLoading(false)
       return
     }
-    history.push('/')
   }
 
   return (
