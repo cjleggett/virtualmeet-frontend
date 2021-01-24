@@ -2,6 +2,7 @@ import React, {  } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Link, useHistory } from 'react-router-dom'
 import useTeam from '../hooks/TeamHook'
+import Races from './Races'
 
 export default function Dashboard() {
 
@@ -36,7 +37,10 @@ export default function Dashboard() {
         <div><Link to="update-profile">Update Profile</Link></div>
         {!team.team && <div><Link to="join-team">Join a Team</Link></div>}
         {!team.team && <div><Link to="add-team">Add Your Team</Link></div>}
+        {team.captain && <div><Link to="requests">Manage Requests</Link></div>}
+        {team.captain && <div><Link to="make-race">Create a new race!</Link></div>}
       </div>
+      <div><Races/></div>
       <div>
         <button onClick={handleLogout}>Log out</button>
       </div>
