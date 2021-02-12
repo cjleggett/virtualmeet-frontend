@@ -1,38 +1,61 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext'
-import { Link, useHistory } from 'react-router-dom'
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { useHistory, Link } from 'react-router-dom'
+import { Link as PrettyLink } from '@material-ui/core'
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}))
 
 export default function Signup() {
 
-  const emailRef = useRef()
-  const firstRef = useRef()
-  const lastRef = useRef()
-  const birthdayRef = useRef()
-  const passwordRef = useRef()
-  const passwordConfirmRef = useRef()
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const [ gender, setGender ] = useState('')
   const { signup, serverURL, updateUserData } = useAuth()
   const history = useHistory()
 
   async function handleSubmit(e) {
     e.preventDefault()
 
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+    let {password, passwordConfirm, first, last, birthday, email, gender} = e.currentTarget.elements
+    gender = gender.value
+    first = first.value
+    last = last.value
+    birthday = birthday.value
+    
+
+    if (password.value !== passwordConfirm.value) {
       return setError('Passwords do not match')
     }
-
-    const first = firstRef.current.value
-    const last = lastRef.current.value
-    const birthday = birthdayRef.current.value
 
     try {
 
       // Create new auth user
       setError('')
       setLoading(true)
-      const res = await signup(emailRef.current.value, passwordRef.current.value)
+      const res = await signup(email.value, password.value)
 
       // get id token for new user
       res.user.getIdToken(true).then(function(idToken) {
@@ -50,7 +73,7 @@ export default function Signup() {
             gender,
             first,
             last,
-            birthday
+            birthday,
           })
         }).then(() => {
           updateUserData({gender, first, last, birthday})
@@ -66,36 +89,125 @@ export default function Signup() {
     }
   }
 
+  const classes = useStyles()
+
   return (
-    <div>
-      <h2>Sign Up</h2>
-        {error && <p>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <label>First Name</label>
-          <input type="text" ref={firstRef} required></input>
-          <label>Last Name</label>
-          <input type="text" ref={lastRef} required></input>
-          <label>Birthday</label>
-          <input type="date" ref={birthdayRef} required></input>
-          <label>Gender</label>
-          <select defaultValue="" onChange={e => setGender(e.currentTarget.value)}>
-            <option value="" disabled>Choose Gender</option>
-            <option value="Woman">Woman</option>
-            <option value="Prefer not to say">Prefer not to say</option>
-            <option value="Other">Other</option>
-            <option value="Man">Man</option>
-          </select>
-          <label>Email</label>
-          <input type="email" ref={emailRef} required></input>
-          <label>Password</label>
-          <input type="password" ref={passwordRef} required></input>
-          <label>Confirm Password</label>
-          <input type="password" ref={passwordConfirmRef} required></input>
-          <button disabled={loading} type="submit">Sign Up</button>
+    <Container component="main" maxWidth="xs">
+      {error && <p>{error}</p>}
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="fname"
+                name="first"
+                variant="outlined"
+                required
+                fullWidth
+                id="firstName"
+                label="First Name"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                name="last"
+                autoComplete="lname"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                id="date"
+                label="Birthday"
+                name="birthday"
+                type="date"
+                defaultValue="2017-05-24"
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputLabel id="gender">Gender</InputLabel>
+                <Select
+                  labelId="gender"
+                  id="gender"
+                  name="gender"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={"Woman"}>Woman</MenuItem>
+                  <MenuItem value={"Man"}>Man</MenuItem>
+                  <MenuItem value={"Other"}>Other</MenuItem>
+                  <MenuItem value={"Prefer not to say"}>Prefer not to say</MenuItem>
+                </Select>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="passwordConfirm"
+                label="Confirm Password"
+                type="password"
+                id="confirm-password"
+                autoComplete="current-password"
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            disabled={loading}
+          >
+            Sign Up
+          </Button>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <PrettyLink component={Link} to="/login">
+                Already have an account? Sign in
+              </PrettyLink>
+            </Grid>
+          </Grid>
         </form>
-      <div>
-        Already have an ccount? <Link to="/login">Log in</Link>
       </div>
-    </div>
+    </Container>
   )
 }

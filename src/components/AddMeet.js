@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import useTeams from '../hooks/TeamsHook';
 import useTeam from '../hooks/TeamHook'
 
-export default function MakeRace() {
+export default function AddMeet() {
 
   const { serverURL } = useAuth()
   const [ error, setError ] = useState('')
@@ -28,7 +28,7 @@ export default function MakeRace() {
       setLoading(true)
 
       // Add new team request to the database
-      fetch(`${serverURL()}/races/newRace`, {
+      fetch(`${serverURL()}/meets/newMeet`, {
         credentials: 'include',
         method: "POST",
         headers: {

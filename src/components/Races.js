@@ -3,16 +3,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 const SERVER_URL = "http://localhost:5000"
 
-class Races extends Component {
+class Meets extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      races: []
+      meets: []
     }
   }
 
   componentDidMount() {
-    fetch(`${SERVER_URL}/races`, {
+    fetch(`${SERVER_URL}/meets`, {
       credentials: "include",
       method: "GET",
       headers: {
@@ -23,7 +23,7 @@ class Races extends Component {
     .then(data => {
       console.log(data)
       this.setState({
-        races: data
+        meets: data
       })
     })
   }
@@ -31,12 +31,12 @@ class Races extends Component {
   render() {
     return (
       <div>
-        <h2>Races</h2>
-        {!this.state.races.length && <p>No current races!</p> }
+        <h2>Meets</h2>
+        {!this.state.meets.length && <p>No current meets!</p> }
         <ul>
-          {this.state.races.length && this.state.races.map(race => (
-            <li key={race.id}>
-              <Link to={`/race/${race.id}`}>{race.name}</Link>
+          {this.state.meets.length && this.state.meets.map(meet => (
+            <li key={meet.id}>
+              <Link to={`/meet/${meet.id}`}>{meet.name}</Link>
             </li>
           ))}
         </ul>
@@ -45,4 +45,4 @@ class Races extends Component {
   }
 }
 
-export default Races;
+export default Meets;

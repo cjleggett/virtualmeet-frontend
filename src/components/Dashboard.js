@@ -41,9 +41,6 @@ export default function Dashboard() {
         {team.captain && <div><Link to="make-race">Create a new race!</Link></div>}
       </div>
       <div><Races/></div>
-      <div>
-        <button onClick={handleLogout}>Log out</button>
-      </div>
     </div>
   )
 }

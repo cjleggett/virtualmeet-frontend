@@ -12,7 +12,6 @@ const SERVER_URL = "http://localhost:5000"
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState()
   const [loading, setLoading] = useState(true)
-  const [userData, setUserData] = useState({})
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password)
@@ -23,7 +22,7 @@ export function AuthProvider({ children }) {
   }
 
   function updateUserData(data) {
-    setUserData(data)
+    localStorage.setItem("userData", JSON.stringify(data))
   }
 
   function logout() {
@@ -57,7 +56,6 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    userData,
     updateUserData,
     login,
     signup,
