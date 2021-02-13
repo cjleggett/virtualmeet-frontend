@@ -77,7 +77,7 @@ export default function Header(props) {
               <Button component={Link} to="/" color="inherit">Home</Button>
               {team && team.captain && <div>
                 <Button color="inherit" component={Link} to="requests">Manage Requests</Button>
-                <Button color="inherit" component={Link} to="make-race">New Race</Button>
+                <Button color="inherit" component={Link} to="make-meet">New Meet</Button>
               </div>}
               <Button color="inherit" component={Link} to="update-profile">Update Profile</Button>
               <Typography className={classes.spacer}></Typography>

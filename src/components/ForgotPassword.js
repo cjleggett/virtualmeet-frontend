@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext"
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';

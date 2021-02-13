@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import useTeams from '../hooks/TeamsHook';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,7 +29,6 @@ export default function JoinTeam(setUserData) {
   const { serverURL } = useAuth()
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const history = useHistory()
   const teams = useTeams()
   console.log(setUserData.setUserData.setUserData)
 
@@ -76,6 +71,7 @@ export default function JoinTeam(setUserData) {
 
   return (
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          {error && <p>{error}</p>}
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <InputLabel id="team">Team</InputLabel>

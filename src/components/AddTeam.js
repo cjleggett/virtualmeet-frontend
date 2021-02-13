@@ -1,14 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext'
-import { Link, useHistory } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { Link as PrettyLink } from '@material-ui/core'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +27,6 @@ export default function AddTeam(setUserData) {
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const { serverURL } = useAuth()
-  const history = useHistory()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -65,6 +59,7 @@ export default function AddTeam(setUserData) {
   const classes = useStyles()
   return (
     <form onSubmit={handleSubmit} className={classes.form} noValidate>
+      {error && <p>{error}</p>}
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField

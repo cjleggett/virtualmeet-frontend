@@ -31,7 +31,7 @@ class App extends React.Component {
               <PrivateRoute path="/add-team" component={AddTeam}/>
               <PrivateRoute path="/join-team" component={JoinTeam}/>
               <PrivateRoute path="/requests" component={Requests}/>
-              <PrivateRoute path="/make-race" component={AddMeet}/>
+              <PrivateRoute path="/make-meet" component={AddMeet}/>
               <PrivateRoute path="/race/:id" component={Race}/>
               <Route path="/signup" component={Signup}/>
               <Route path="/login" component={Login}/>
@@ -39,7 +39,7 @@ class App extends React.Component {
             </Switch>
           </AuthProvider>
         </Router>
-      </Layout>
+        </Layout>
     )
   }
 }
