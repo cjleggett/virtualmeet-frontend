@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import useTeam from '../hooks/TeamHook'
 import GetStarted from './GetStarted'
-import Races from './Races'
+import Meets from './Meets'
 
 export default function Dashboard() {
 
@@ -15,7 +14,7 @@ export default function Dashboard() {
       <div>
         {!team.team && userData && userData.requests && !userData.requests.length && <GetStarted setUserData={setUserData}/>}
       </div>
-      <div><Races/></div>
+      <div><Meets/></div>
     </div>
   )
 }
