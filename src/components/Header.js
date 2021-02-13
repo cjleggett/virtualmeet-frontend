@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Button from '@material-ui/core/Button';
 import { useAuth } from '../contexts/AuthContext'
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
+import useTeam from '../hooks/TeamHook'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,8 +41,30 @@ function ElevationScroll(props) {
 }
 
 export default function Header(props) {
-  const { logout } = useAuth()
+  const team = useTeam()
+  console.log(team)
+  const { logout, serverURL } = useAuth()
   const user = JSON.parse(localStorage.getItem("userData"))
+  const history = useHistory()
+
+  async function handleLogout() {
+
+    // Log out on frontend
+    await logout()
+
+    // Terminate session on backend
+    fetch(`${serverURL()}/auth/logout`, {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      body: JSON.stringify({})
+    })
+
+    history.push('login')
+  }
 
   const classes = useStyles()
   return (
@@ -54,9 +75,13 @@ export default function Header(props) {
             <Toolbar>
               <Typography className={classes.title} variant="h6">Hi, {user.first}!</Typography>
               <Button component={Link} to="/" color="inherit">Home</Button>
+              {team && team.captain && <div>
+                <Button color="inherit" component={Link} to="requests">Manage Requests</Button>
+                <Button color="inherit" component={Link} to="make-race">New Race</Button>
+              </div>}
               <Button color="inherit" component={Link} to="update-profile">Update Profile</Button>
               <Typography className={classes.spacer}></Typography>
-              <Button color="inherit" onClick={logout}>Log Out</Button>
+              <Button color="inherit" onClick={handleLogout}>Log Out</Button>
             </Toolbar>
           </AppBar>
         </div>

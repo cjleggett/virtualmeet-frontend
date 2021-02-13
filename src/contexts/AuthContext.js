@@ -22,6 +22,8 @@ export function AuthProvider({ children }) {
   }
 
   function updateUserData(data) {
+    console.log('setting data')
+    console.log(data)
     localStorage.setItem("userData", JSON.stringify(data))
   }
 

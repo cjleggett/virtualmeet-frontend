@@ -1,42 +1,20 @@
-import React, {  } from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import useTeam from '../hooks/TeamHook'
+import GetStarted from './GetStarted'
 import Races from './Races'
 
 export default function Dashboard() {
 
-  const { currentUser, logout, serverURL } = useAuth()
   const team = useTeam()
-  console.log(team)
-  const history = useHistory()
-
-  async function handleLogout() {
-
-    // Log out on frontend
-    await logout()
-
-    // Terminate session on backend
-    fetch(`${serverURL()}/auth/logout`, {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
-      },
-      body: JSON.stringify({})
-    })
-
-    history.push('login')
-  }
+  const [ userData, setUserData ] = useState(JSON.parse(localStorage.getItem('userData')))
+  console.log(userData)
 
   return (
     <div>
       <div>
-        <strong>email:</strong> {currentUser.email}
-        <div><Link to="update-profile">Update Profile</Link></div>
-        {!team.team && <div><Link to="join-team">Join a Team</Link></div>}
-        {!team.team && <div><Link to="add-team">Add Your Team</Link></div>}
+        {!team.team && userData && userData.requests && !userData.requests.length && <GetStarted setUserData={setUserData}/>}
         {team.captain && <div><Link to="requests">Manage Requests</Link></div>}
         {team.captain && <div><Link to="make-race">Create a new race!</Link></div>}
       </div>

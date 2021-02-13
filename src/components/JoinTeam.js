@@ -28,13 +28,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function JoinTeam() {
+export default function JoinTeam(setUserData) {
 
   const { serverURL } = useAuth()
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const history = useHistory()
   const teams = useTeams()
+  console.log(setUserData.setUserData.setUserData)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -56,8 +57,11 @@ export default function JoinTeam() {
         body: JSON.stringify({
           teamId: team
         })
-      }).then(() => {
-        history.push('/')
+      }).then(res => res.json()).then(data => {
+        let userData = JSON.parse(localStorage.getItem('userData'))
+        userData.requests = data.requests
+        localStorage.setItem('userData', JSON.stringify(userData))
+        setUserData.setUserData.setUserData(userData)
       })
 
 
@@ -71,13 +75,6 @@ export default function JoinTeam() {
   const classes = useStyles()
 
   return (
-    <Container component="main" maxWidth="xs">
-      {error && <p>{error}</p>}
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Join Team
-        </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -107,7 +104,5 @@ export default function JoinTeam() {
             Send Join Request
           </Button>
         </form>
-      </div>
-    </Container>
   )
 }

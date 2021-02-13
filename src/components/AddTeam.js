@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Login() {
+export default function AddTeam(setUserData) {
 
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
@@ -53,8 +53,8 @@ export default function Login() {
           "Content-Type": "application/json;charset=UTF-8"
         },
         body: JSON.stringify({name, abbreviation})
-      }).then(res => res.json()).then(() => {
-        history.push('/')
+      }).then(res => res.json()).then(data => {
+        window.location.reload(false);
       })
     } catch {
       setError('Could not create team.')
@@ -64,53 +64,39 @@ export default function Login() {
 
   const classes = useStyles()
   return (
-    <Container component="main" maxWidth="xs">
-      {error && <p>{error}</p>}
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Add Your Team
-        </Typography>
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="name"
-                label="Team Name"
-                name="name"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="short"
-                label="Abbreviation (<5 Characters)"
-                name="short"
-              />
-            </Grid>
-          <Button
-            type="submit"
+    <form onSubmit={handleSubmit} className={classes.form} noValidate>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            required
             fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            disabled={loading}
-          >
-            Add Team
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <PrettyLink component={Link} to="/">Cancel</PrettyLink>
-            </Grid>
-          </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            id="name"
+            label="Team Name"
+            name="name"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            id="short"
+            label="Abbreviation (<5 Characters)"
+            name="abbreviation"
+          />
+        </Grid>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+        disabled={loading}
+      >
+        Add Team
+      </Button>
+      </Grid>
+    </form>
   )
 }

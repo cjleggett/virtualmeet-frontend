@@ -75,8 +75,9 @@ export default function Signup() {
             last,
             birthday,
           })
-        }).then(() => {
-          updateUserData({gender, first, last, birthday})
+        }).then(response => response.json()).then( data => {
+          console.log('signup success')
+          updateUserData(data)
           history.push('/')
         })
       })
