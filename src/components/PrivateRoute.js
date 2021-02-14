@@ -11,7 +11,7 @@ export default function PrivateRoute({component: Component, ...rest}) {
     <Route 
     {...rest}
     render={props => {
-      return currentUser ? <div><Header/><Component {...props}/></div> : <Redirect to="/login"/>
+      return currentUser ? <div><Header/><Component style={{marginTop: 200}} {...props}/></div> : <Redirect to="/login"/>
     }}
     >
 

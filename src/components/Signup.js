@@ -12,6 +12,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory, Link } from 'react-router-dom'
 import { Link as PrettyLink } from '@material-ui/core'
+import { genders } from '../helpers/enum'
+import {SERVER_URL} from '../helpers/constants'
+import {formatDate} from '../helpers/dates'
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,7 +37,7 @@ export default function Signup() {
 
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const { signup, serverURL, updateUserData } = useAuth()
+  const { signup, updateUserData } = useAuth()
   const history = useHistory()
 
   async function handleSubmit(e) {
@@ -61,7 +65,7 @@ export default function Signup() {
       res.user.getIdToken(true).then(function(idToken) {
         
         // Add new user info to database
-        fetch(`${serverURL()}/auth/signup`, {
+        fetch(`${SERVER_URL}/auth/signup`, {
           credentials: 'include',
           method: "POST",
           headers: {
@@ -108,7 +112,6 @@ export default function Signup() {
                 name="first"
                 variant="outlined"
                 required
-                fullWidth
                 id="firstName"
                 label="First Name"
                 autoFocus
@@ -118,7 +121,6 @@ export default function Signup() {
               <TextField
                 variant="outlined"
                 required
-                fullWidth
                 id="lastName"
                 label="Last Name"
                 name="last"
@@ -131,7 +133,7 @@ export default function Signup() {
                 label="Birthday"
                 name="birthday"
                 type="date"
-                defaultValue="2017-05-24"
+                defaultValue={formatDate(new Date())}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
@@ -144,14 +146,14 @@ export default function Signup() {
                   labelId="gender"
                   id="gender"
                   name="gender"
+                  defaultValue="Prefer not to say"
                 >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value={"Woman"}>Woman</MenuItem>
-                  <MenuItem value={"Man"}>Man</MenuItem>
-                  <MenuItem value={"Other"}>Other</MenuItem>
-                  <MenuItem value={"Prefer not to say"}>Prefer not to say</MenuItem>
+                  {genders.map(gender => (
+                    <MenuItem value={gender}>{gender}</MenuItem>
+                  ))}
                 </Select>
             </Grid>
             <Grid item xs={12}>

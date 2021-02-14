@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import {SERVER_URL} from '../helpers/constants'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +26,6 @@ export default function AddTeam(setUserData) {
 
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const { serverURL } = useAuth()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -39,7 +38,7 @@ export default function AddTeam(setUserData) {
       setLoading(true)
 
       // Add team to database
-      fetch(`${serverURL()}/teams/newTeam`, {
+      fetch(`${SERVER_URL}/teams/newTeam`, {
         credentials: 'include',
         method: "POST",
         headers: {

@@ -8,6 +8,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, Link } from 'react-router-dom'
 import useTeam from '../hooks/TeamHook'
+import {SERVER_URL} from '../helpers/constants'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +45,7 @@ function ElevationScroll(props) {
 export default function Header(props) {
   const team = useTeam()
   console.log(team)
-  const { logout, serverURL } = useAuth()
+  const { logout } = useAuth()
   const user = JSON.parse(localStorage.getItem("userData"))
   const history = useHistory()
 
@@ -53,7 +55,7 @@ export default function Header(props) {
     await logout()
 
     // Terminate session on backend
-    fetch(`${serverURL()}/auth/logout`, {
+    fetch(`${SERVER_URL}/auth/logout`, {
       credentials: "include",
       method: "POST",
       headers: {
@@ -63,7 +65,7 @@ export default function Header(props) {
       body: JSON.stringify({})
     })
 
-    history.push('login')
+    history.replace('login')
   }
 
   const classes = useStyles()
@@ -76,10 +78,10 @@ export default function Header(props) {
               <Typography className={classes.title} variant="h6">Hi, {user.first}!</Typography>
               <Button component={Link} to="/" color="inherit">Home</Button>
               {team && team.captain && <div>
-                <Button color="inherit" component={Link} to="requests">Manage Requests</Button>
-                <Button color="inherit" component={Link} to="make-meet">New Meet</Button>
+                <Button color="inherit" component={Link} to="/requests">Manage Requests</Button>
+                <Button color="inherit" component={Link} to="/make-meet">New Meet</Button>
               </div>}
-              <Button color="inherit" component={Link} to="update-profile">Update Profile</Button>
+              <Button color="inherit" component={Link} to="/update-profile">Update Profile</Button>
               <Typography className={classes.spacer}></Typography>
               <Button color="inherit" onClick={handleLogout}>Log Out</Button>
             </Toolbar>

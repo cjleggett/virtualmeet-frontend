@@ -1,26 +1,53 @@
-import React, { useRef, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext'
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import { SERVER_URL } from '../helpers/constants'
 
-export default function AddEntry({ raceId }) {
 
-  const { serverURL } = useAuth()
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+  title: {
+    textAlign: "center"
+  }
+}))
+
+export default function AddEntry({ event, handleClose }) {
+
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const hours = useRef()
-  const minutes = useRef()
-  const seconds = useRef()
-  const elevation = useRef()
 
 
   async function handleSubmit(e) {
     e.preventDefault()
+    const { hours, minutes, seconds } = e.currentTarget.elements
+    console.log({
+      hours: hours.value,
+      minutes: minutes.value,
+      seconds: seconds.value,
+      event: event.id
+    })
 
     try {
       setError('')
       setLoading(true)
 
       // Add new team request to the database
-      fetch(`${serverURL()}/entries/new`, {
+      fetch(`${SERVER_URL}/entries/new`, {
         credentials: 'include',
         method: "POST",
         headers: {
@@ -28,14 +55,13 @@ export default function AddEntry({ raceId }) {
           "Content-Type": "application/json;charset=UTF-8"
         },
         body: JSON.stringify({
-          hours: hours.current.value,
-          minutes: minutes.current.value,
-          seconds: seconds.current.value,
-          elevation: elevation.current.value,
-          race: raceId
+          hours: hours.value,
+          minutes: minutes.value,
+          seconds: seconds.value,
+          event: event.id
         })
       }).then(() => {
-        window.location.reload(false);
+        handleClose()
       })
     } catch(e) {
       setError('Failed to create a race')
@@ -44,22 +70,61 @@ export default function AddEntry({ raceId }) {
     }
   }
 
+  const classes = useStyles()
+
   return (
     <div>
-      <h2>Submit your Run</h2>
+      <Typography className={classes.title} component="h1" variant="h5">
+        {event.name}
+      </Typography>
+      <form onSubmit={e => handleSubmit(e)} className={classes.form} noValidate>
         {error && <p>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <label>Hours</label>
-          <input type="number" min="0" step="1" ref={hours} required></input>
-          <label>Minutes</label>
-          <input type="number" min="0" max="60" step="1" ref={minutes} required></input>
-          <label>Seconds</label>
-          <input type="number" min="0" step=".01" ref={seconds} required></input>
-          <label>Elevation Gain (in feet)</label>
-          <input type="number" min="0" ref={elevation} required></input>
-          
-          <button disabled={loading} type="submit">Submit</button>
-        </form>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="hours"
+              label="Hours"
+              name="hours"
+              type="number"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="minutes"
+              label="Minutes"
+              name="minutes"
+              type="number"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="seconds"
+              label="Seconds"
+              name="seconds"
+              type="number"
+            />
+          </Grid>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          disabled={loading}
+        >
+          Submit Time
+        </Button>
+        </Grid>
+      </form>
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext'
 import useTeams from '../hooks/TeamsHook';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -7,6 +6,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
+import {SERVER_URL} from '../helpers/constants'
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function JoinTeam(setUserData) {
 
-  const { serverURL } = useAuth()
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const teams = useTeams()
@@ -42,7 +42,7 @@ export default function JoinTeam(setUserData) {
       team = team.value
       console.log(team)
       // Add new team request to the database
-      fetch(`${serverURL()}/teams/join`, {
+      fetch(`${SERVER_URL}/teams/join`, {
         credentials: 'include',
         method: "POST",
         headers: {

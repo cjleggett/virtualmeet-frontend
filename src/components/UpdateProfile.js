@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory, Link } from 'react-router-dom'
 import { Link as PrettyLink } from '@material-ui/core'
+import {SERVER_URL} from '../helpers/constants'
+import {formatDate} from '../helpers/dates'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +37,7 @@ export default function UpdateProfile() {
 
   const [ error, setError ] = useState("")
   const [ loading, setLoading ] = useState(false)
-  const { updateEmail, updatePassword, serverURL, currentUser, updateUserData } = useAuth()
+  const { updateEmail, updatePassword, currentUser, updateUserData } = useAuth()
   const userData = JSON.parse(localStorage.getItem("userData"))
   const history = useHistory()
 
@@ -54,7 +56,7 @@ export default function UpdateProfile() {
     last = last.value
     birthday = birthday.value
 
-    fetch(`${serverURL()}/users/editUser`, {
+    fetch(`${SERVER_URL}/users/editUser`, {
       credentials: 'include',
       method: "PUT",
       headers: {
@@ -131,7 +133,7 @@ export default function UpdateProfile() {
                 label="Birthday"
                 name="birthday"
                 type="date"
-                defaultValue="2017-05-24"
+                defaultValue={formatDate(new Date())}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,

@@ -9,6 +9,7 @@ import Container from '@material-ui/core/Container';
 import { useAuth } from '../contexts/AuthContext'
 import { useHistory, Link } from 'react-router-dom'
 import { Link as PrettyLink } from '@material-ui/core'
+import {SERVER_URL} from '../helpers/constants'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,7 +31,7 @@ export default function Login() {
 
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const { login, serverURL, updateUserData } = useAuth()
+  const { login, updateUserData } = useAuth()
   const history = useHistory()
 
   async function handleSubmit(e) {
@@ -47,7 +48,7 @@ export default function Login() {
 
       // Once User is logged in, begin a session in the backend:
       res.user.getIdToken(true).then(function(idToken) {
-        fetch(`${serverURL()}/auth/login`, {
+        fetch(`${SERVER_URL}/auth/login`, {
           credentials: 'include',
           method: "POST",
           headers: {

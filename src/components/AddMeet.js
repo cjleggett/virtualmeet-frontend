@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import useTeams from '../hooks/TeamsHook';
 import useTeam from '../hooks/TeamHook'
 import Button from '@material-ui/core/Button';
@@ -16,6 +15,8 @@ import Container from '@material-ui/core/Container';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import Chip from '@material-ui/core/Chip';
+import {SERVER_URL} from '../helpers/constants'
+import {formatDate} from '../helpers/dates'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -71,7 +72,6 @@ function getStyles(name, personName, theme) {
 
 export default function AddMeet() {
 
-  const { serverURL } = useAuth()
   const [ error, setError ] = useState('')
   const [ loading, setLoading ] = useState(false)
 
@@ -107,7 +107,7 @@ export default function AddMeet() {
       setLoading(true)
 
       // Add new team request to the database
-      fetch(`${serverURL()}/meets/newMeet`, {
+      fetch(`${SERVER_URL}/meets/newMeet`, {
         credentials: 'include',
         method: "POST",
         headers: {
@@ -158,7 +158,7 @@ export default function AddMeet() {
                 label="Start Date"
                 name="start"
                 type="date"
-                defaultValue="2017-05-24"
+                defaultValue={formatDate(new Date())}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
@@ -171,7 +171,7 @@ export default function AddMeet() {
                 label="End Date"
                 name="end"
                 type="date"
-                defaultValue="2017-05-24"
+                defaultValue={formatDate(new Date())}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,

@@ -6,7 +6,7 @@ class Layout extends Component {
     return (
       <div>
         {this.props.children}
-        <div style={{height: '10px'}}/>
+        <div style={{height: '50px'}}/>
         <Footer />
       </div>
     )

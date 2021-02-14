@@ -15,8 +15,9 @@ import AddTeam from "./components/AddTeam"
 import JoinTeam from "./components/JoinTeam"
 import Requests from "./components/Requests"
 import AddMeet from "./components/AddMeet"
-import Race from "./components/Race"
+import Meet from "./components/Meet"
 import Layout from "./components/Layout"
+import EditMeet from "./components/EditMeet"
 import './styles/app.css'
 
 class App extends React.Component {
@@ -32,7 +33,8 @@ class App extends React.Component {
               <PrivateRoute path="/join-team" component={JoinTeam}/>
               <PrivateRoute path="/requests" component={Requests}/>
               <PrivateRoute path="/make-meet" component={AddMeet}/>
-              <PrivateRoute path="/race/:id" component={Race}/>
+              <PrivateRoute path="/meet/:id" component={Meet}/>
+              <PrivateRoute path="/edit-meet/:id" component={EditMeet}/>
               <Route path="/signup" component={Signup}/>
               <Route path="/login" component={Login}/>
               <Route path="/forgot-password" component={ForgotPassword}/>
