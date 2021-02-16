@@ -1,98 +1,110 @@
 import React, { useState } from "react";
-import { useAuth } from "../contexts/AuthContext"
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { useHistory, Link } from 'react-router-dom'
-import { Link as PrettyLink } from '@material-ui/core'
-import {SERVER_URL} from '../helpers/constants'
-import {formatDate} from '../helpers/dates'
-
+import { useAuth } from "../contexts/AuthContext";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { useHistory, Link } from "react-router-dom";
+import { Link as PrettyLink } from "@material-ui/core";
+import { SERVER_URL } from "../helpers/constants";
+import { formatDate } from "../helpers/dates";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}))
-
+}));
 
 export default function UpdateProfile() {
-
-  const [ error, setError ] = useState("")
-  const [ loading, setLoading ] = useState(false)
-  const { updateEmail, updatePassword, currentUser, updateUserData } = useAuth()
-  const userData = JSON.parse(localStorage.getItem("userData"))
-  const history = useHistory()
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const {
+    updateEmail,
+    updatePassword,
+    currentUser,
+    updateUserData,
+  } = useAuth();
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const history = useHistory();
 
   async function handleSubmit(e) {
-    let {password, passwordConfirm, first, last, birthday, email, gender} = e.currentTarget.elements
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    let {
+      password,
+      passwordConfirm,
+      first,
+      last,
+      birthday,
+      email,
+      gender,
+    } = e.currentTarget.elements;
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     if (password.value !== passwordConfirm.value) {
-      return setError("Passwords do not match")
+      return setError("Passwords do not match");
     }
 
     // Update database information:
-    gender = gender.value
-    first = first.value
-    last = last.value
-    birthday = birthday.value
+    gender = gender.value;
+    first = first.value;
+    last = last.value;
+    birthday = birthday.value;
 
     fetch(`${SERVER_URL}/users/editUser`, {
-      credentials: 'include',
+      credentials: "include",
       method: "PUT",
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
       },
       body: JSON.stringify({
         gender,
         first,
         last,
-        birthday
-      })
-    }).then(() => {
-      updateUserData({gender, first, last, birthday})
-      const promises = []
-      if (email.value !== currentUser.email) {
-        promises.push(updateEmail(email.value))
-      }
-
-      if (password.value) {
-        promises.push(updatePassword(password.value))
-      }
-      Promise.all(promises).then(() => {
-        history.push("/")
-      })
-      .catch(() => {})
-      
-    }).catch(() => {
-      setError("Failed to update profile. Try logging out and trying again.")
-    }).finally(() => {
-      setLoading(false)
+        birthday,
+      }),
     })
+      .then(() => {
+        updateUserData({ gender, first, last, birthday });
+        const promises = [];
+        if (email.value !== currentUser.email) {
+          promises.push(updateEmail(email.value));
+        }
 
+        if (password.value) {
+          promises.push(updatePassword(password.value));
+        }
+        Promise.all(promises)
+          .then(() => {
+            history.push("/");
+          })
+          .catch(() => {});
+      })
+      .catch(() => {
+        setError("Failed to update profile. Try logging out and trying again.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
-  const classes = useStyles()
+  const classes = useStyles();
   return (
     <Container component="main" maxWidth="xs">
       {error && <p>{error}</p>}
@@ -142,20 +154,22 @@ export default function UpdateProfile() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputLabel id="gender">Gender</InputLabel>
-                <Select
-                  defaultValue="Woman"
-                  labelId="gender"
-                  id="gender"
-                  name="gender"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={"Woman"}>Woman</MenuItem>
-                  <MenuItem value={"Man"}>Man</MenuItem>
-                  <MenuItem value={"Other"}>Other</MenuItem>
-                  <MenuItem value={"Prefer not to say"}>Prefer not to say</MenuItem>
-                </Select>
+              <Select
+                defaultValue="Woman"
+                labelId="gender"
+                id="gender"
+                name="gender"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={"Woman"}>Woman</MenuItem>
+                <MenuItem value={"Man"}>Man</MenuItem>
+                <MenuItem value={"Other"}>Other</MenuItem>
+                <MenuItem value={"Prefer not to say"}>
+                  Prefer not to say
+                </MenuItem>
+              </Select>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -204,11 +218,13 @@ export default function UpdateProfile() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <PrettyLink component={Link} to="/">Cancel</PrettyLink>
+              <PrettyLink component={Link} to="/">
+                Cancel
+              </PrettyLink>
             </Grid>
           </Grid>
         </form>
       </div>
     </Container>
-  )
+  );
 }

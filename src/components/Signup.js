@@ -1,76 +1,84 @@
-import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext'
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { useHistory, Link } from 'react-router-dom'
-import { Link as PrettyLink } from '@material-ui/core'
-import { genders } from '../helpers/enum'
-import {SERVER_URL} from '../helpers/constants'
-import {formatDate} from '../helpers/dates'
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { useHistory, Link, useLocation } from "react-router-dom";
+import { Link as PrettyLink } from "@material-ui/core";
+import { genders } from "../helpers/enum";
+import { SERVER_URL } from "../helpers/constants";
+import { formatDate } from "../helpers/dates";
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}))
+}));
 
 export default function Signup() {
-
-  const [ error, setError ] = useState('')
-  const [ loading, setLoading ] = useState(false)
-  const { signup, updateUserData } = useAuth()
-  const history = useHistory()
+  const teamId = useQuery().get("team");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signup, updateUserData } = useAuth();
+  const history = useHistory();
 
   async function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
 
-    let {password, passwordConfirm, first, last, birthday, email, gender} = e.currentTarget.elements
-    gender = gender.value
-    first = first.value
-    last = last.value
-    birthday = birthday.value
-    
+    let {
+      password,
+      passwordConfirm,
+      first,
+      last,
+      birthday,
+      email,
+      gender,
+    } = e.currentTarget.elements;
+    gender = gender.value;
+    first = first.value;
+    last = last.value;
+    birthday = birthday.value;
 
     if (password.value !== passwordConfirm.value) {
-      return setError('Passwords do not match')
+      return setError("Passwords do not match");
     }
 
     try {
-
       // Create new auth user
-      setError('')
-      setLoading(true)
-      const res = await signup(email.value, password.value)
+      setError("");
+      setLoading(true);
+      const res = await signup(email.value, password.value);
 
       // get id token for new user
-      res.user.getIdToken(true).then(function(idToken) {
-        
+      res.user.getIdToken(true).then(function (idToken) {
         // Add new user info to database
         fetch(`${SERVER_URL}/auth/signup`, {
-          credentials: 'include',
+          credentials: "include",
           method: "POST",
           headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json;charset=UTF-8"
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
           },
           body: JSON.stringify({
             idToken,
@@ -78,23 +86,23 @@ export default function Signup() {
             first,
             last,
             birthday,
-          })
-        }).then(response => response.json()).then( data => {
-          console.log('signup success')
-          updateUserData(data)
-          history.push('/')
+            teamId,
+          }),
         })
-      })
-
-
-    } catch(e) {
-      setError('Failed to create an account')
-      setLoading(false)
-      return
+          .then((response) => response.json())
+          .then((data) => {
+            updateUserData(data);
+            history.push("/");
+          });
+      });
+    } catch (e) {
+      setError("Failed to create an account");
+      setLoading(false);
+      return;
     }
   }
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -142,19 +150,21 @@ export default function Signup() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputLabel id="gender">Gender</InputLabel>
-                <Select
-                  labelId="gender"
-                  id="gender"
-                  name="gender"
-                  defaultValue="Prefer not to say"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
+              <Select
+                labelId="gender"
+                id="gender"
+                name="gender"
+                defaultValue="Prefer not to say"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {genders.map((gender) => (
+                  <MenuItem key={gender} value={gender}>
+                    {gender}
                   </MenuItem>
-                  {genders.map(gender => (
-                    <MenuItem value={gender}>{gender}</MenuItem>
-                  ))}
-                </Select>
+                ))}
+              </Select>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -212,5 +222,5 @@ export default function Signup() {
         </form>
       </div>
     </Container>
-  )
+  );
 }

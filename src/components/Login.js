@@ -1,78 +1,81 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { useAuth } from '../contexts/AuthContext'
-import { useHistory, Link } from 'react-router-dom'
-import { Link as PrettyLink } from '@material-ui/core'
-import {SERVER_URL} from '../helpers/constants'
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { useAuth } from "../contexts/AuthContext";
+import { useHistory, Link } from "react-router-dom";
+import { Link as PrettyLink } from "@material-ui/core";
+import { SERVER_URL } from "../helpers/constants";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}))
+}));
 
 export default function Login() {
-
-  const [ error, setError ] = useState('')
-  const [ loading, setLoading ] = useState(false)
-  const { login, updateUserData } = useAuth()
-  const history = useHistory()
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login, updateUserData, updateSession } = useAuth();
+  const history = useHistory();
 
   async function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-
-      const { email, password} = e.currentTarget.elements
+      const { email, password } = e.currentTarget.elements;
 
       // Log in user using firebase auth
-      setError('')
-      setLoading(true)
-      const res = await login(email.value, password.value)
+      setError("");
+      setLoading(true);
+      const res = await login(email.value, password.value);
 
       // Once User is logged in, begin a session in the backend:
-      res.user.getIdToken(true).then(function(idToken) {
-        fetch(`${SERVER_URL}/auth/login`, {
-          credentials: 'include',
-          method: "POST",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json;charset=UTF-8"
-          },
-          body: JSON.stringify({idToken})
-        }).then(res => res.json()).then(data => {
-          updateUserData(data)
-          history.push('/')
+      res.user
+        .getIdToken(true)
+        .then(function (idToken) {
+          fetch(`${SERVER_URL}/auth/login`, {
+            credentials: "include",
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json;charset=UTF-8",
+            },
+            body: JSON.stringify({ idToken }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              updateSession(data.sessionId)
+              delete data.sessionId
+              updateUserData(data);
+              history.push("/");
+            })
+            .catch();
         })
-        .catch()
-      }).catch()
-      
-    } catch(e) {
-      console.log(e)
-      setError('Failed to log in')
-      setLoading(false)
-      return
+        .catch();
+    } catch (e) {
+      console.log(e);
+      setError("Failed to log in");
+      setLoading(false);
+      return;
     }
-
   }
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -130,5 +133,5 @@ export default function Login() {
         </form>
       </div>
     </Container>
-  )
+  );
 }

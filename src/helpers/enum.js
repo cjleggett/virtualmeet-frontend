@@ -3,11 +3,11 @@ const units = {
   Kilometers: 2,
   Meters: 3,
   Yards: 4,
-}
+};
 
-let reverseUnits = {}
+let reverseUnits = {};
 for (const key in units) {
-  reverseUnits[`${units[key]}`] = key
+  reverseUnits[`${units[key]}`] = key;
 }
 
 const genders = [
@@ -15,20 +15,20 @@ const genders = [
   "Woman",
   "Nonbinary Person",
   "Other",
-  "Prefer not to say"
-]
+  "Prefer not to say",
+];
 
 const genderPlurals = {
-  "Man": "Men",
-  "Woman": "Women",
+  Man: "Men",
+  Woman: "Women",
   "Nonbinary Person": "Nonbinary People",
-  "Other": "Other",
-  "Prefer not to say": "People who chose not to say"
-}
+  Other: "Other",
+  "Prefer not to say": "People who chose not to say",
+};
 
 module.exports = {
   units,
   reverseUnits,
   genders,
-  genderPlurals
-}
+  genderPlurals,
+};

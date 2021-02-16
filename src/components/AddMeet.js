@@ -1,23 +1,22 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'
-import useTeams from '../hooks/TeamsHook';
-import useTeam from '../hooks/TeamHook'
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Input from '@material-ui/core/Input';
-import FormControl from '@material-ui/core/FormControl';
-import Chip from '@material-ui/core/Chip';
-import {SERVER_URL} from '../helpers/constants'
-import {formatDate} from '../helpers/dates'
-
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import useTeams from "../hooks/TeamsHook";
+import useTeam from "../hooks/TeamHook";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Input from "@material-ui/core/Input";
+import FormControl from "@material-ui/core/FormControl";
+import Chip from "@material-ui/core/Chip";
+import { SERVER_URL } from "../helpers/constants";
+import { formatDate } from "../helpers/dates";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -26,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 300,
   },
   chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: "flex",
+    flexWrap: "wrap",
   },
   chip: {
     margin: 2,
@@ -37,12 +36,12 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -71,13 +70,12 @@ function getStyles(name, personName, theme) {
 }
 
 export default function AddMeet() {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [ error, setError ] = useState('')
-  const [ loading, setLoading ] = useState(false)
-
-  const history = useHistory()
-  const teams = useTeams()
-  const currentTeam = useTeam()
+  const history = useHistory();
+  const teams = useTeams();
+  const currentTeam = useTeam();
 
   const classes = useStyles();
   const theme = useTheme();
@@ -88,45 +86,47 @@ export default function AddMeet() {
   };
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    let { invitedTeams, name, start, end } = e.currentTarget.elements
-    name = name.value
-    start = start.value
-    end = end.value
-    
+    e.preventDefault();
+    let { invitedTeams, name, start, end } = e.currentTarget.elements;
+    name = name.value;
+    start = start.value;
+    end = end.value;
+
     // Find which teams are invited through this string:
-    let invitedIds = []
+    let invitedIds = [];
     for (const team of teams) {
       if (invitedTeams.value.search(team.name) !== -1) {
-        invitedIds.push(team.id)
+        invitedIds.push(team.id);
       }
     }
 
     try {
-      setError('')
-      setLoading(true)
+      setError("");
+      setLoading(true);
 
       // Add new team request to the database
       fetch(`${SERVER_URL}/meets/newMeet`, {
-        credentials: 'include',
+        credentials: "include",
         method: "POST",
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json;charset=UTF-8"
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
         },
         body: JSON.stringify({
           startDate: start,
           endDate: end,
           invitedTeams: invitedIds,
           name,
-        })
-      }).then(() => {
-        history.push('/')
+        }),
       })
-    } catch(e) {
-      setError('Failed to create a meet')
-      setLoading(false)
-      return
+        .then((res) => res.json())
+        .then((data) => {
+          history.push(`/edit-meet/${data.id}`);
+        });
+    } catch (e) {
+      setError("Failed to create a meet");
+      setLoading(false);
+      return;
     }
   }
 
@@ -139,7 +139,7 @@ export default function AddMeet() {
           Create Meet
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
-        <Grid container spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 autoComplete="name"
@@ -179,7 +179,7 @@ export default function AddMeet() {
               />
             </Grid>
             <Grid item xs={12}>
-            <InputLabel id="demo-mutiple-chip-label">Invite Teams</InputLabel>
+              <InputLabel id="demo-mutiple-chip-label">Invite Teams</InputLabel>
               <Select
                 labelId="demo-mutiple-chip-label"
                 id="demo-mutiple-chip"
@@ -191,23 +191,31 @@ export default function AddMeet() {
                 renderValue={(selected) => (
                   <div className={classes.chips}>
                     {selected.map((value) => (
-                      <Chip key={value} label={value} className={classes.chip} />
+                      <Chip
+                        key={value}
+                        label={value}
+                        className={classes.chip}
+                      />
                     ))}
                   </div>
                 )}
                 MenuProps={MenuProps}
               >
-                {teams.filter(team => team.id !== currentTeam.team).map((team) => (
-                  <MenuItem key={team.id} value={team.name} style={getStyles(team.name, personName, theme)}>
-                    {team.name}
-                  </MenuItem>
-                ))}
+                {teams
+                  .filter((team) => team.id !== currentTeam.team)
+                  .map((team) => (
+                    <MenuItem
+                      key={team.id}
+                      value={team.name}
+                      style={getStyles(team.name, personName, theme)}
+                    >
+                      {team.name}
+                    </MenuItem>
+                  ))}
               </Select>
             </Grid>
           </Grid>
-          <FormControl className={classes.formControl}>
-            
-          </FormControl>
+          <FormControl className={classes.formControl}></FormControl>
           <Button
             type="submit"
             fullWidth
@@ -218,8 +226,8 @@ export default function AddMeet() {
           >
             Create Meet
           </Button>
-      </form>
-    </div>
-  </Container>
-  )
+        </form>
+      </div>
+    </Container>
+  );
 }
