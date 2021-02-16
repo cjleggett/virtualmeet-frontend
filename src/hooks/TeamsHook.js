@@ -1,9 +1,11 @@
 import React from "react";
-const SERVER_URL = "http://localhost:5000";
+import { useAuth } from "../contexts/AuthContext"
+import { SERVER_URL } from "../helpers/constants";
 
 const useTeams = () => {
   // 1
   const [teams, teamsSet] = React.useState([]);
+  const { getSession } = useAuth()
 
   React.useEffect(() => {
     async function fetchTeams() {
@@ -13,6 +15,7 @@ const useTeams = () => {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
+          sessionid: getSession(),
         },
       });
       const responseJson = await fullResponse.json();
@@ -20,7 +23,7 @@ const useTeams = () => {
     }
 
     fetchTeams();
-  }, []);
+  });
 
   // 2
   return teams;

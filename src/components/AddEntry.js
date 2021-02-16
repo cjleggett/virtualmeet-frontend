@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { SERVER_URL } from "../helpers/constants";
 import { formatDate } from "../helpers/dates";
+import { useAuth } from "../contexts/AuthContext"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddEntry({ event, handleClose }) {
+  const { getSession } = useAuth()
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -45,6 +47,7 @@ export default function AddEntry({ event, handleClose }) {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
+          sessionid: getSession(),
         },
         body: JSON.stringify({
           hours: hours.value,
