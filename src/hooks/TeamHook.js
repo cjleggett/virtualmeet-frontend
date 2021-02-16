@@ -1,22 +1,33 @@
-import React from 'react'
-const SERVER_URL = "http://localhost:5000"
+import React from "react";
+import { SERVER_URL } from '../helpers/constants'
 
 const useTeam = () => {
   // 1
-  const [team, teamSet] = React.useState({team: undefined, captain: false});
+  const [team, teamSet] = React.useState({
+    team: undefined,
+    captain: false,
+    loaded: false,
+  });
 
   React.useEffect(() => {
     async function fetchTeam() {
-      const fullResponse = await fetch(`${SERVER_URL}/teams`, {
+      fetch(`${SERVER_URL}/teams`, {
         credentials: "include",
         method: "GET",
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json;charset=UTF-8"
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
         },
+      }).then(res => res.json()).then(fullResponse => {
+        console.log(fullResponse)
+        fullResponse.loaded = true;
+        teamSet(fullResponse);
+        console.log('here')
+      }).catch(e => {
+        console.log('here')
+        console.log(e)
       })
-      const responseJson = await fullResponse.json();
-      teamSet(responseJson);
+      
     }
 
     fetchTeam();
@@ -26,4 +37,4 @@ const useTeam = () => {
   return team;
 };
 
-export default useTeam
+export default useTeam;

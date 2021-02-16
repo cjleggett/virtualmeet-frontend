@@ -1,58 +1,55 @@
 import React, { useState } from "react";
-import { useAuth } from "../contexts/AuthContext"
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import { Link } from "react-router-dom"
-import { Link as PrettyLink } from '@material-ui/core'
-
+import { useAuth } from "../contexts/AuthContext";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+import { Link } from "react-router-dom";
+import { Link as PrettyLink } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}))
+}));
 
 export default function ForgotPassword() {
-
-  const [ error, setError ] = useState("")
-  const [ loading, setLoading ] = useState(false)
-  const [ message, setMessage ] = useState("")
-  const { resetPassword } = useAuth()
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const { resetPassword } = useAuth();
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    const { email } = e.currentTarget.elements
+    e.preventDefault();
+    const { email } = e.currentTarget.elements;
 
     try {
-      setError("")
-      setMessage("")
-      setLoading(true)
-      await resetPassword(email.value)
-      setMessage("Check your email for further instructions")
-      email.value = ""
-    } catch(e) {
-      setError("Failed to send reset password")
+      setError("");
+      setMessage("");
+      setLoading(true);
+      await resetPassword(email.value);
+      setMessage("Check your email for further instructions");
+      email.value = "";
+    } catch (e) {
+      setError("Failed to send reset password");
     }
-    setLoading(false)
-
+    setLoading(false);
   }
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -100,5 +97,5 @@ export default function ForgotPassword() {
         </form>
       </div>
     </Container>
-  )
+  );
 }

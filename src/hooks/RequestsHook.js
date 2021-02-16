@@ -1,5 +1,5 @@
-import React from 'react'
-const SERVER_URL = "http://localhost:5000"
+import React from "react";
+const SERVER_URL = "http://localhost:5000";
 
 const useRequests = () => {
   // 1
@@ -11,10 +11,10 @@ const useRequests = () => {
         credentials: "include",
         method: "GET",
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json;charset=UTF-8"
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
         },
-      })
+      });
       const responseJson = await fullResponse.json();
       requestsSet(responseJson);
     }
@@ -26,4 +26,4 @@ const useRequests = () => {
   return requests;
 };
 
-export default useRequests
+export default useRequests;

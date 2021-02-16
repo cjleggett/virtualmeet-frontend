@@ -1,17 +1,17 @@
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Toolbar from '@material-ui/core/Toolbar';
-import { makeStyles } from '@material-ui/core/styles';
-import React, { useState, useEffect } from 'react';
-const SERVER_URL = "http://localhost:5000"
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Toolbar from "@material-ui/core/Toolbar";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
+const SERVER_URL = "http://localhost:5000";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
     margin: 20,
   },
   cardContent: {
@@ -28,91 +28,93 @@ const useStyles = makeStyles((theme) => ({
     margin: 5,
   },
   title: {
-    margin: 10
-  }
-}))
+    margin: 10,
+  },
+}));
 
 export default function Requests() {
-  const [requests, setRequests] = useState([])
-  const classes = useStyles()
+  const [requests, setRequests] = useState();
+  const classes = useStyles();
 
   useEffect(() => {
-    if (requests.length) {
-      return
+    if (requests) {
+      return;
     }
     fetch(`${SERVER_URL}/teams/requests`, {
       credentials: "include",
       method: "GET",
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
       },
-    }).then(response => response.json())
-    .then(data => {
-      setRequests(data)
     })
-  })
+      .then((response) => response.json())
+      .then((data) => {
+        setRequests(data);
+      });
+  });
 
   function submit(reqId, approve) {
-    console.log(reqId, approve)
-
     // Remove request locally:
-    const reqs = requests
-    const newReqs = reqs.filter(req => req.id !== reqId)
-    setRequests(newReqs)
+    const reqs = requests;
+    const newReqs = reqs.filter((req) => req.id !== reqId);
+    setRequests(newReqs);
 
     // Update status of request on backend
     fetch(`${SERVER_URL}/teams/respond`, {
       credentials: "include",
       method: "POST",
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
       },
       body: JSON.stringify({
         reqId,
-        approve
-      })
-    }).then(res => {
-      console.log(res)
-    })
+        approve,
+      }),
+    }).then((res) => {});
   }
 
   return (
     <div>
-      <Typography variant="h4" className={classes.title} >
+      <Typography variant="h4" className={classes.title}>
         Your Unhandled Requests:
       </Typography>
-      {!requests.length && <p>No new requests!</p> }
+      {requests && !requests.length && <p>No new requests!</p>}
       <ul>
-        {requests.map(request => (
-          <Card className={classes.card} key={request.id}>
-            <CardContent className={classes.cardContent}>
-              <Toolbar>
-                <Typography gutterBottom variant="h5" className={classes.name}>
-                  {request.user.first} {request.user.last} 
-                </Typography>
-                <Button
+        {requests &&
+          requests.map((request) => (
+            <Card className={classes.card} key={request.id}>
+              <CardContent className={classes.cardContent}>
+                <Toolbar>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    className={classes.name}
+                  >
+                    {request.user.first} {request.user.last}
+                  </Typography>
+                  <Button
                     className={classes.button}
                     variant="contained"
                     color="primary"
                     onClick={() => submit(request.id, true)}
                   >
                     Approve
-                </Button>
-                <Button
+                  </Button>
+                  <Button
                     className={classes.button}
                     variant="contained"
                     color="primary"
                     onClick={() => submit(request.id, false)}
                   >
                     Deny
-                </Button>
-              </Toolbar>
-            </CardContent>
-          </Card>
-        ))}
+                  </Button>
+                </Toolbar>
+              </CardContent>
+            </Card>
+          ))}
       </ul>
     </div>
-  )
+  );
 }
