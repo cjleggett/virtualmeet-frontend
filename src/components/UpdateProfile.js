@@ -39,6 +39,7 @@ export default function UpdateProfile() {
     updatePassword,
     currentUser,
     updateUserData,
+    getSession,
   } = useAuth();
   const userData = JSON.parse(localStorage.getItem("userData"));
   const history = useHistory();
@@ -72,6 +73,7 @@ export default function UpdateProfile() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
       body: JSON.stringify({
         gender,

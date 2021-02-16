@@ -20,6 +20,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import { units, reverseUnits } from "../helpers/enum";
 import { SERVER_URL } from "../helpers/constants";
+import { useAuth } from "../contexts/AuthContext"
 
 const useStyles = makeStyles((theme) => ({
   explanation: {
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditMeet() {
   // retrieve meet id
   const meetId = useParams().id;
+  const { getSession } = useAuth()
 
   const [meetData, setMeetData] = useState();
   const [name, setName] = useState("");
@@ -71,6 +73,7 @@ export default function EditMeet() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
     })
       .then((response) => response.json())
@@ -89,6 +92,7 @@ export default function EditMeet() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
     })
       .then((response) => response.json())
@@ -108,6 +112,7 @@ export default function EditMeet() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
+          sessionid: getSession(),
         },
         body: JSON.stringify({
           name,

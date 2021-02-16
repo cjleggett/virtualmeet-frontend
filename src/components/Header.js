@@ -43,7 +43,7 @@ function ElevationScroll(props) {
 
 export default function Header(props) {
   const team = useTeam();
-  const { logout, updateUserData } = useAuth();
+  const { logout, updateUserData, getSession } = useAuth();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("userData")))
   if (!user) {
     fetch(`${SERVER_URL}/users/current`, {
@@ -52,6 +52,7 @@ export default function Header(props) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
     }).then(res => res.json()).then(data => {
       if (data.msg === "no current user") {
@@ -75,6 +76,7 @@ export default function Header(props) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
       body: JSON.stringify({}),
     });

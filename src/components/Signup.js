@@ -40,7 +40,7 @@ export default function Signup() {
   const teamId = useQuery().get("team");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signup, updateUserData } = useAuth();
+  const { signup, updateUserData, updateSession } = useAuth();
   const history = useHistory();
 
   async function handleSubmit(e) {
@@ -91,6 +91,8 @@ export default function Signup() {
         })
           .then((response) => response.json())
           .then((data) => {
+            updateSession(data.sessionId)
+            delete data.sessionId
             updateUserData(data);
             history.push("/");
           });

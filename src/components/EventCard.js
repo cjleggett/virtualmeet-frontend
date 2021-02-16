@@ -11,6 +11,7 @@ import AddEntry from "./AddEntry";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EntriesTable from "./EntriesTable";
 import { SERVER_URL } from "../helpers/constants";
+import { useAuth } from "../contexts/AuthContext"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EventCard({ event, invitedTeams }) {
   const classes = useStyles();
+  const { getSession } = useAuth()
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState();
@@ -61,6 +63,7 @@ export default function EventCard({ event, invitedTeams }) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
     })
       .then((response) => response.json())

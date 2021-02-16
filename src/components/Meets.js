@@ -8,7 +8,8 @@ import React, { useState, useEffect } from "react";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import useTeam from "../hooks/TeamHook";
 import { useHistory } from "react-router-dom";
-const SERVER_URL = "http://localhost:5000";
+import { useAuth } from "../contexts/AuthContext"
+import { SERVER_URL } from "../helpers/constants";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -39,6 +40,7 @@ export default function Meets() {
   const [meets, setMeets] = useState();
   const team = useTeam();
   const history = useHistory();
+  const { getSession } = useAuth()
 
   useEffect(() => {
     if (meets !== undefined) {
@@ -50,6 +52,7 @@ export default function Meets() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
     })
       .then((response) => response.json())

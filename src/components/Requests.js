@@ -5,7 +5,8 @@ import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect } from "react";
-const SERVER_URL = "http://localhost:5000";
+import { useAuth } from "../contexts/AuthContext"
+import { SERVER_URL } from "../helpers/constants";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Requests() {
   const [requests, setRequests] = useState();
   const classes = useStyles();
+  const { getSession } = useAuth()
 
   useEffect(() => {
     if (requests) {
@@ -46,6 +48,7 @@ export default function Requests() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
     })
       .then((response) => response.json())
@@ -67,6 +70,7 @@ export default function Requests() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
+        sessionid: getSession(),
       },
       body: JSON.stringify({
         reqId,

@@ -4,7 +4,6 @@ import GetStarted from "./GetStarted";
 import Meets from "./Meets";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import { makeStyles } from "@material-ui/core/styles";
-import { useAuth } from '../contexts/AuthContext'
 import { Typography, Toolbar, Button, Link } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,8 +13,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
-  const { sessionId } = useAuth()
-  console.log(sessionId)
   const team = useTeam();
   const [userData, setUserData] = useState(
     JSON.parse(localStorage.getItem("userData"))

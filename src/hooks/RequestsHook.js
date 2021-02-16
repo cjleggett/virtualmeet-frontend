@@ -1,9 +1,11 @@
 import React from "react";
-const SERVER_URL = "http://localhost:5000";
+import { useAuth } from "../contexts/AuthContext"
+import { SERVER_URL } from "../helpers/constants";
 
 const useRequests = () => {
   // 1
   const [requests, requestsSet] = React.useState([]);
+  const { getSession } = useAuth()
 
   React.useEffect(() => {
     async function fetchRequests() {
@@ -13,6 +15,7 @@ const useRequests = () => {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
+          sessionid: getSession(),
         },
       });
       const responseJson = await fullResponse.json();

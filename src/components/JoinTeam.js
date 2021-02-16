@@ -7,6 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 import { SERVER_URL } from "../helpers/constants";
+import { useAuth } from "../contexts/AuthContext"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function JoinTeam(setUserData) {
+  const { getSession } = useAuth()
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const teams = useTeams();
@@ -44,6 +46,7 @@ export default function JoinTeam(setUserData) {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
+          sessionid: getSession(),
         },
         body: JSON.stringify({
           teamId: team,
