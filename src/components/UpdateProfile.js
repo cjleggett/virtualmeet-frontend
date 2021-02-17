@@ -147,7 +147,7 @@ export default function UpdateProfile() {
                 label="Birthday"
                 name="birthday"
                 type="date"
-                defaultValue={formatDate(new Date())}
+                defaultValue={userData.birthday}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
@@ -157,7 +157,7 @@ export default function UpdateProfile() {
             <Grid item xs={12} sm={6}>
               <InputLabel id="gender">Gender</InputLabel>
               <Select
-                defaultValue="Woman"
+                defaultValue={userData.gender}
                 labelId="gender"
                 id="gender"
                 name="gender"
