@@ -13,7 +13,6 @@ import Container from "@material-ui/core/Container";
 import { useHistory, Link } from "react-router-dom";
 import { Link as PrettyLink } from "@material-ui/core";
 import { SERVER_URL } from "../helpers/constants";
-import { formatDate } from "../helpers/dates";
 
 const useStyles = makeStyles((theme) => ({
   paper: {

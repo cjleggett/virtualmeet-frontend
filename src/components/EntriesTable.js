@@ -38,12 +38,14 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
+  { id: "place", label: "Place" },
   { id: "name", label: "Name (Last, First)" },
   { id: "time", label: "Time" },
   { id: "date", label: "Date" },
   { id: "gender", label: "Gender" },
   { id: "age", label: "Age" },
   { id: "team", label: "Team" },
+  { id: "score", label: "Score" }
 ];
 
 function EnhancedTableHead(props) {
@@ -58,7 +60,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.id === "name" ? "left" : "right"}
+            align={headCell.id === "place" || headCell.id === "name" ? "left" : "right"}
             padding={"default"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -115,30 +117,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function formatTime(hours, minutes, seconds) {
-  const secondsNum = parseFloat(seconds);
-  if (hours.length === 1) {
-    hours = "0" + hours;
-  }
-  if (minutes.length === 1) {
-    minutes = "0" + minutes;
-  }
-  if (secondsNum < 10) {
-    seconds = "0" + seconds;
-  }
-  if (seconds.length === 2) {
-    seconds = seconds + ".00";
-  }
-  if (seconds.length === 4) {
-    seconds = seconds + "0";
-  }
-  return `${hours}:${minutes}:${seconds}`;
-}
-
 export default function EntriesTable({ entries, invitedTeams }) {
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
+  const [orderBy, setOrderBy] = useState("time");
   const rows = [];
   for (const entry of entries) {
     const birthDate = new Date(entry.user.birthday);
@@ -147,16 +129,14 @@ export default function EntriesTable({ entries, invitedTeams }) {
     const age = Math.abs(ageDate.getUTCFullYear() - 1970);
     rows.push({
       name: `${entry.user.last}, ${entry.user.first}`,
-      time: formatTime(
-        `${entry.hours}`,
-        `${entry.minutes}`,
-        `${entry.seconds}`
-      ),
+      time: entry.time,
       gender: entry.user.gender,
       age,
       teamShort: invitedTeams[entry.team].abbreviation,
       team: invitedTeams[entry.team].name,
       date: entry.date,
+      place: entry.position,
+      score: entry.points
     });
   }
 
@@ -195,6 +175,7 @@ export default function EntriesTable({ entries, invitedTeams }) {
                       tabIndex={-1}
                       key={row.name}
                     >
+                      <TableCell align="left">{row.place}</TableCell>
                       <TableCell
                         component="th"
                         id={labelId}
@@ -212,6 +193,7 @@ export default function EntriesTable({ entries, invitedTeams }) {
                           <div>{row.teamShort}</div>
                         </Tooltip>
                       </TableCell>
+                      <TableCell align="right">{row.score !== 0 ? row.score : "--"}</TableCell>
                     </TableRow>
                   );
                 }
