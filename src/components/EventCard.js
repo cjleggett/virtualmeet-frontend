@@ -105,7 +105,7 @@ export default function EventCard({ event, invitedTeams, updateEntries }) {
           </Typography>
           <Typography className={classes.eventInfo}>
             <Box fontStyle="italic" fontWeight="fontWeightLight">
-              *Note: If you don't identify as a man or woman, feel free to submit your time for those events you feel most comfortable in!
+              *If you don't identify as a man or woman, feel free to submit your time for those events you feel most comfortable in!
             </Box>
           </Typography>
           {entries && (
