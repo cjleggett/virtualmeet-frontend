@@ -15,6 +15,7 @@ import { Link as PrettyLink } from "@material-ui/core";
 import { genders } from "../helpers/enum";
 import { SERVER_URL } from "../helpers/constants";
 import { formatDate } from "../helpers/dates";
+import Box from '@material-ui/core/Box';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -22,13 +23,13 @@ function useQuery() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -202,6 +203,13 @@ export default function Signup() {
                 id="confirm-password"
                 autoComplete="current-password"
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                <Box fontStyle="italic" fontWeight="fontWeightLight">
+                  *Privacy Note: Your name, age, and gender will be visible to other users on the site. Your email, password, and exact birthday will not be shared with anyone.
+                </Box>
+              </Typography>
             </Grid>
           </Grid>
           <Button

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import AddEntry from "./AddEntry";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EntriesTable from "./EntriesTable";
-import { SERVER_URL } from "../helpers/constants";
-import { useAuth } from "../contexts/AuthContext"
+import { reverseUnits } from "../helpers/enum"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,45 +47,25 @@ const useStyles = makeStyles((theme) => ({
   entry: {
     margin: 200,
   },
+  eventInfo: {
+    marginLeft: 25
+  }
 }));
 
-export default function EventCard({ event, invitedTeams }) {
+export default function EventCard({ event, invitedTeams, updateEntries }) {
   const classes = useStyles();
-  const { getSession } = useAuth()
+  console.log(reverseUnits)
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = useState(false);
-  const [entries, setEntries] = useState();
-
-  function reloadEntries() {
-    fetch(`${SERVER_URL}/entries/event/${event.id}`, {
-      credentials: "include",
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-        sessionid: getSession(),
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setEntries(data);
-      });
-  }
-
-  useEffect(() => {
-    if (entries) {
-      return;
-    }
-    reloadEntries();
-  });
+  const entries = event.entries
 
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    reloadEntries();
     setOpen(false);
+    updateEntries()
   };
 
   function getModalStyle() {
@@ -117,6 +97,17 @@ export default function EventCard({ event, invitedTeams }) {
               Add My Time
             </Button>
           </Toolbar>
+          <Typography className={classes.eventInfo} variant="h6">
+            {`Distance: ${event.distance} ${reverseUnits[parseInt(event.units)]}`}
+          </Typography>
+          <Typography className={classes.eventInfo} variant="h6">
+            {`Gender: ${event.gender}`}
+          </Typography>
+          <Typography className={classes.eventInfo}>
+            <Box fontStyle="italic" fontWeight="fontWeightLight">
+              *Note: If you don't identify as a man or woman, feel free to submit your time for those events you feel most comfortable in!
+            </Box>
+          </Typography>
           {entries && (
             <div>
               {entries.length > 0 ? (

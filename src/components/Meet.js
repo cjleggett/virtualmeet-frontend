@@ -7,6 +7,7 @@ import { HashLink as Link } from "react-router-hash-link";
 import { Link as PrettyLink } from "@material-ui/core";
 import EventCard from "./EventCard";
 import { useAuth } from "../contexts/AuthContext"
+import TeamRanks from "./TeamRanks"
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -27,11 +28,8 @@ export default function Meet() {
   const [meetData, setMeetData] = useState();
   const [events, setEvents] = useState();
 
-  useEffect(() => {
-    if (meetData) {
-      return;
-    }
-    fetch(`${SERVER_URL}/meets/meets/${meetId}`, {
+  function updateEntries() {
+    fetch(`${SERVER_URL}/entries/meet/${meetId}`, {
       credentials: "include",
       method: "GET",
       headers: {
@@ -39,31 +37,21 @@ export default function Meet() {
         "Content-Type": "application/json;charset=UTF-8",
         sessionid: getSession(),
       },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setMeetData(data);
-      });
-  });
+    }).then(response => response.json())
+      .then(data => {
+        setMeetData(data.meetInfo)
+        console.log(data.meetInfo)
+        setEvents(data.events)
+      })
+  }
+
 
   useEffect(() => {
-    if (events) {
-      return;
+    if (meetData) {
+      return
     }
-    fetch(`${SERVER_URL}/events/${meetId}`, {
-      credentials: "include",
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-        sessionid: getSession(),
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setEvents(data);
-      });
-  });
+    updateEntries()
+  })
 
   const classes = useStyles();
 
@@ -74,6 +62,7 @@ export default function Meet() {
         id: key,
         name: meetData.invitedTeams[key].name,
         abbreviation: meetData.invitedTeams[key].abbreviation,
+        score: meetData.invitedTeams[key].score,
       });
     }
     return newTeams;
@@ -95,13 +84,7 @@ export default function Meet() {
           <Typography className={classes.padded} variant="h6">
             Teams:
           </Typography>
-          <List>
-            {getTeams().map((team) => (
-              <ListItem key={team.id}>
-                {team.name} ({team.abbreviation})
-              </ListItem>
-            ))}
-          </List>
+          <TeamRanks teams={getTeams()} />
           <Typography className={classes.padded} variant="h6">
             Events:
           </Typography>
@@ -123,6 +106,7 @@ export default function Meet() {
                 <div id={event.id}>
                   <div style={{ height: 25 }}></div>
                   <EventCard
+                    updateEntries={updateEntries}
                     event={event}
                     invitedTeams={meetData.invitedTeams}
                   />
