@@ -97,7 +97,7 @@ export default function Meet() {
                       component={Link}
                       to={`/meet/${meetId}#${event.id}`}
                     >
-                      {event.name}
+                      {event.name} ({event.gender})
                     </PrettyLink>
                   </ListItem>
                 ))}
