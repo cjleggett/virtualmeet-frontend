@@ -40,7 +40,6 @@ export default function Meet() {
     }).then(response => response.json())
       .then(data => {
         setMeetData(data.meetInfo)
-        console.log(data.meetInfo)
         setEvents(data.events)
       })
   }
