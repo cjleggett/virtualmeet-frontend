@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EventCard({ event, invitedTeams, updateEntries }) {
   const classes = useStyles();
-  console.log(reverseUnits)
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = useState(false);
   const entries = event.entries
