@@ -1,11 +1,11 @@
 import React from "react";
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext";
 import { SERVER_URL } from "../helpers/constants";
 
 const useTeams = () => {
   // 1
   const [teams, teamsSet] = React.useState([]);
-  const { getSession } = useAuth()
+  const { getSession } = useAuth();
 
   React.useEffect(() => {
     async function fetchTeams() {

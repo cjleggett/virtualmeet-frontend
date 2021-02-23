@@ -45,7 +45,7 @@ const headCells = [
   { id: "gender", label: "Gender" },
   { id: "age", label: "Age" },
   { id: "team", label: "Team" },
-  { id: "score", label: "Score" }
+  { id: "score", label: "Score" },
 ];
 
 function EnhancedTableHead(props) {
@@ -60,7 +60,11 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.id === "place" || headCell.id === "name" ? "left" : "right"}
+            align={
+              headCell.id === "place" || headCell.id === "name"
+                ? "left"
+                : "right"
+            }
             padding={"default"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -123,10 +127,16 @@ export default function EntriesTable({ entries, invitedTeams }) {
   const [orderBy, setOrderBy] = useState("time");
   const rows = [];
   for (const entry of entries) {
-    const birthDate = new Date(entry.user.birthday);
-    const ageDifMs = Date.now() - birthDate.getTime();
-    const ageDate = new Date(ageDifMs);
-    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    let age;
+    if (entry.user.birthday) {
+      const birthDate = new Date(entry.user.birthday);
+      const ageDifMs = Date.now() - birthDate.getTime();
+      const ageDate = new Date(ageDifMs);
+      age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    } else {
+      age = "--";
+    }
+
     rows.push({
       name: `${entry.user.last}, ${entry.user.first}`,
       time: entry.time,
@@ -136,7 +146,7 @@ export default function EntriesTable({ entries, invitedTeams }) {
       team: invitedTeams[entry.team].name,
       date: entry.date,
       place: entry.position,
-      score: entry.points
+      score: entry.points,
     });
   }
 
@@ -193,7 +203,9 @@ export default function EntriesTable({ entries, invitedTeams }) {
                           <div>{row.teamShort}</div>
                         </Tooltip>
                       </TableCell>
-                      <TableCell align="right">{row.score !== 0 ? row.score : "--"}</TableCell>
+                      <TableCell align="right">
+                        {row.score !== 0 ? row.score : "--"}
+                      </TableCell>
                     </TableRow>
                   );
                 }

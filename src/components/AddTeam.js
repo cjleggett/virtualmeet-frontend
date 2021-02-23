@@ -4,7 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import { SERVER_URL } from "../helpers/constants";
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AddTeam(setUserData) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { getSession } = useAuth()
+  const { getSession } = useAuth();
 
   async function handleSubmit(e) {
     e.preventDefault();

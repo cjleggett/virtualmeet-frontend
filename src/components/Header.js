@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -44,7 +44,9 @@ function ElevationScroll(props) {
 export default function Header(props) {
   const team = useTeam();
   const { logout, updateUserData, getSession } = useAuth();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("userData")))
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("userData"))
+  );
   if (!user) {
     fetch(`${SERVER_URL}/users/current`, {
       credentials: "include",
@@ -54,14 +56,17 @@ export default function Header(props) {
         "Content-Type": "application/json;charset=UTF-8",
         sessionid: getSession(),
       },
-    }).then(res => res.json()).then(data => {
-      if (data.msg === "no current user") {
-        handleLogout()
-      } else {
-        updateUserData(data)
-        setUser(data)
-      }
-    }).catch()
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.msg === "no current user") {
+          handleLogout();
+        } else {
+          updateUserData(data);
+          setUser(data);
+        }
+      })
+      .catch();
   }
   const history = useHistory();
 
@@ -87,38 +92,39 @@ export default function Header(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      {user && 
-      <ElevationScroll {...props}>
-        <div>
-          <AppBar className={classes.root}>
-            <Toolbar>
-              <Typography className={classes.title} variant="h6">
-                Hi, {user.first}!
-              </Typography>
-              <Button component={Link} to="/" color="inherit">
-                Home
-              </Button>
-              {team && team.captain && (
-                <div>
-                  <Button color="inherit" component={Link} to="/requests">
-                    Manage Requests
-                  </Button>
-                  <Button color="inherit" component={Link} to="/make-meet">
-                    New Meet
-                  </Button>
-                </div>
-              )}
-              <Button color="inherit" component={Link} to="/update-profile">
-                Update Profile
-              </Button>
-              <Typography className={classes.spacer}></Typography>
-              <Button color="inherit" onClick={handleLogout}>
-                Log Out
-              </Button>
-            </Toolbar>
-          </AppBar>
-        </div>
-      </ElevationScroll>}
+      {user && (
+        <ElevationScroll {...props}>
+          <div>
+            <AppBar className={classes.root}>
+              <Toolbar>
+                <Typography className={classes.title} variant="h6">
+                  Hi, {user.first}!
+                </Typography>
+                <Button component={Link} to="/" color="inherit">
+                  Home
+                </Button>
+                {team && team.captain && (
+                  <div>
+                    <Button color="inherit" component={Link} to="/requests">
+                      Manage Requests
+                    </Button>
+                    <Button color="inherit" component={Link} to="/make-meet">
+                      New Meet
+                    </Button>
+                  </div>
+                )}
+                <Button color="inherit" component={Link} to="/update-profile">
+                  Update Profile
+                </Button>
+                <Typography className={classes.spacer}></Typography>
+                <Button color="inherit" onClick={handleLogout}>
+                  Log Out
+                </Button>
+              </Toolbar>
+            </AppBar>
+          </div>
+        </ElevationScroll>
+      )}
       <Toolbar />
     </React.Fragment>
   );

@@ -6,8 +6,8 @@ import { useParams } from "react-router-dom";
 import { HashLink as Link } from "react-router-hash-link";
 import { Link as PrettyLink } from "@material-ui/core";
 import EventCard from "./EventCard";
-import { useAuth } from "../contexts/AuthContext"
-import TeamRanks from "./TeamRanks"
+import { useAuth } from "../contexts/AuthContext";
+import TeamRanks from "./TeamRanks";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Meet() {
-  const { getSession } = useAuth()
+  const { getSession } = useAuth();
   const meetId = useParams().id;
   const [meetData, setMeetData] = useState();
   const [events, setEvents] = useState();
@@ -37,20 +37,20 @@ export default function Meet() {
         "Content-Type": "application/json;charset=UTF-8",
         sessionid: getSession(),
       },
-    }).then(response => response.json())
-      .then(data => {
-        setMeetData(data.meetInfo)
-        setEvents(data.events)
-      })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setMeetData(data.meetInfo);
+        setEvents(data.events);
+      });
   }
-
 
   useEffect(() => {
     if (meetData) {
-      return
+      return;
     }
-    updateEntries()
-  })
+    updateEntries();
+  });
 
   const classes = useStyles();
 

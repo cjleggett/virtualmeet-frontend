@@ -1,11 +1,11 @@
 import React from "react";
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext";
 import { SERVER_URL } from "../helpers/constants";
 
 const useRequests = () => {
   // 1
   const [requests, requestsSet] = React.useState([]);
-  const { getSession } = useAuth()
+  const { getSession } = useAuth();
 
   React.useEffect(() => {
     async function fetchRequests() {

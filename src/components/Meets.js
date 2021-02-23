@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import useTeam from "../hooks/TeamHook";
 import { useHistory } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext";
 import { SERVER_URL } from "../helpers/constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +40,7 @@ export default function Meets() {
   const [meets, setMeets] = useState();
   const team = useTeam();
   const history = useHistory();
-  const { getSession } = useAuth()
+  const { getSession } = useAuth();
 
   useEffect(() => {
     if (meets !== undefined) {

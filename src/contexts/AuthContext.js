@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
   }
 
   function getSession() {
-    return JSON.parse(localStorage.getItem("sessionId"))
+    return JSON.parse(localStorage.getItem("sessionId"));
   }
 
   function login(email, password) {

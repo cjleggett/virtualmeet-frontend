@@ -17,7 +17,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Chip from "@material-ui/core/Chip";
 import { SERVER_URL } from "../helpers/constants";
 import { formatDate } from "../helpers/dates";
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -71,7 +71,7 @@ function getStyles(name, personName, theme) {
 }
 
 export default function AddMeet() {
-  const { getSession } = useAuth()
+  const { getSession } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 

@@ -1,8 +1,7 @@
 import React from "react";
-import { SERVER_URL } from '../helpers/constants'
-import { useAuth } from "../contexts/AuthContext"
+import { SERVER_URL } from "../helpers/constants";
+import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-
 
 const useTeam = () => {
   // 1
@@ -12,11 +11,11 @@ const useTeam = () => {
     loaded: false,
   });
   const history = useHistory();
-  const { getSession, logout } = useAuth()
+  const { getSession, logout } = useAuth();
 
   React.useEffect(() => {
     if (team.loaded) {
-      return
+      return;
     }
     async function fetchTeam() {
       fetch(`${SERVER_URL}/teams`, {
@@ -27,15 +26,17 @@ const useTeam = () => {
           "Content-Type": "application/json;charset=UTF-8",
           sessionid: getSession(),
         },
-      }).then(res => res.json()).then(fullResponse => {
-        fullResponse.loaded = true;
-        teamSet(fullResponse);
-      }).catch(async e => {
-        await logout()
-        console.log(e)
-        history.replace("login");
       })
-      
+        .then((res) => res.json())
+        .then((fullResponse) => {
+          fullResponse.loaded = true;
+          teamSet(fullResponse);
+        })
+        .catch(async (e) => {
+          await logout();
+          console.log(e);
+          history.replace("login");
+        });
     }
 
     fetchTeam();

@@ -11,7 +11,7 @@ import AddIcon from "@material-ui/icons/Add";
 import AddEntry from "./AddEntry";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EntriesTable from "./EntriesTable";
-import { reverseUnits } from "../helpers/enum"
+import { reverseUnits } from "../helpers/enum";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,15 +48,15 @@ const useStyles = makeStyles((theme) => ({
     margin: 200,
   },
   eventInfo: {
-    marginLeft: 25
-  }
+    marginLeft: 25,
+  },
 }));
 
 export default function EventCard({ event, invitedTeams, updateEntries }) {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = useState(false);
-  const entries = event.entries
+  const entries = event.entries;
 
   const handleOpen = () => {
     setOpen(true);
@@ -64,7 +64,7 @@ export default function EventCard({ event, invitedTeams, updateEntries }) {
 
   const handleClose = () => {
     setOpen(false);
-    updateEntries()
+    updateEntries();
   };
 
   function getModalStyle() {
@@ -97,14 +97,17 @@ export default function EventCard({ event, invitedTeams, updateEntries }) {
             </Button>
           </Toolbar>
           <Typography className={classes.eventInfo} variant="h6">
-            {`Distance: ${event.distance} ${reverseUnits[parseInt(event.units)]}`}
+            {`Distance: ${event.distance} ${
+              reverseUnits[parseInt(event.units)]
+            }`}
           </Typography>
           <Typography className={classes.eventInfo} variant="h6">
             {`Gender: ${event.gender}`}
           </Typography>
           <Typography className={classes.eventInfo}>
             <Box fontStyle="italic" fontWeight="fontWeightLight">
-              *If you don't identify as a man or woman, feel free to submit your time for those events you feel most comfortable in!
+              *If you don't identify as a man or woman, feel free to submit your
+              time for those events you feel most comfortable in!
             </Box>
           </Typography>
           {entries && (

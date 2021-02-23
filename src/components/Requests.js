@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext";
 import { SERVER_URL } from "../helpers/constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Requests() {
   const [requests, setRequests] = useState();
   const classes = useStyles();
-  const { getSession } = useAuth()
+  const { getSession } = useAuth();
 
   useEffect(() => {
     if (requests) {

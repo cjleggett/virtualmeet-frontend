@@ -59,8 +59,8 @@ export default function Login() {
           })
             .then((res) => res.json())
             .then((data) => {
-              updateSession(data.sessionId)
-              delete data.sessionId
+              updateSession(data.sessionId);
+              delete data.sessionId;
               updateUserData(data);
               history.push("/");
             })
