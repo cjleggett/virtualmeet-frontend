@@ -156,6 +156,13 @@ export default function EntriesTable({ entries, invitedTeams }) {
     setOrderBy(property);
   };
 
+  function cutStart(time) {
+    while (time[0] === "0" || time[0] === ":") {
+      time = time.substring(1);
+    }
+    return time;
+  }
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -194,7 +201,7 @@ export default function EntriesTable({ entries, invitedTeams }) {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.time}</TableCell>
+                      <TableCell align="right">{cutStart(row.time)}</TableCell>
                       <TableCell align="right">{row.date}</TableCell>
                       <TableCell align="right">{row.gender}</TableCell>
                       <TableCell align="right">{row.age}</TableCell>
