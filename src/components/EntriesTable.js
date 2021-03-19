@@ -42,7 +42,6 @@ const headCells = [
   { id: "name", label: "Name (Last, First)" },
   { id: "time", label: "Time" },
   { id: "date", label: "Date" },
-  { id: "gender", label: "Gender" },
   { id: "age", label: "Age" },
   { id: "team", label: "Team" },
   { id: "score", label: "Score" },
@@ -89,9 +88,7 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -140,7 +137,6 @@ export default function EntriesTable({ entries, invitedTeams }) {
     rows.push({
       name: `${entry.user.last}, ${entry.user.first}`,
       time: entry.time,
-      gender: entry.user.gender,
       age,
       teamShort: invitedTeams[entry.team].abbreviation,
       team: invitedTeams[entry.team].name,
@@ -203,7 +199,6 @@ export default function EntriesTable({ entries, invitedTeams }) {
                       </TableCell>
                       <TableCell align="right">{cutStart(row.time)}</TableCell>
                       <TableCell align="right">{row.date}</TableCell>
-                      <TableCell align="right">{row.gender}</TableCell>
                       <TableCell align="right">{row.age}</TableCell>
                       <TableCell align="right">
                         <Tooltip title={row.team}>

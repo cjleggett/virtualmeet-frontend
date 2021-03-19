@@ -12,6 +12,7 @@ import AddEntry from "./AddEntry";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EntriesTable from "./EntriesTable";
 import { reverseUnits } from "../helpers/enum";
+import useTeam from "../hooks/TeamHook"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,8 +53,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EventCard({ event, invitedTeams, updateEntries }) {
+export default function EventCard({ event, invitedTeams, updateEntries, isCurrent }) {
   const classes = useStyles();
+  const team = useTeam();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = useState(false);
   const entries = event.entries;
@@ -86,15 +88,17 @@ export default function EventCard({ event, invitedTeams, updateEntries }) {
             <Typography className={classes.spacer} variant="h4">
               {event.name}
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              startIcon={<AddIcon />}
-              onClick={handleOpen}
-            >
-              Add My Time
-            </Button>
+            { invitedTeams[team.team] && isCurrent &&
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<AddIcon />}
+                onClick={handleOpen}
+              >
+                Add My Time
+              </Button>
+            }
           </Toolbar>
           <Typography className={classes.eventInfo} variant="h6">
             {`Distance: ${event.distance} ${

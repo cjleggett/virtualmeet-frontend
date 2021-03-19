@@ -10,6 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Box from "@material-ui/core/Box";
 import { useHistory, Link } from "react-router-dom";
 import { Link as PrettyLink } from "@material-ui/core";
 import { SERVER_URL } from "../helpers/constants";
@@ -205,6 +206,15 @@ export default function UpdateProfile() {
                 id="confirm-password"
                 autoComplete="current-password"
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                <Box fontStyle="italic" fontWeight="fontWeightLight">
+                  *Privacy Note: Your name and age will be visible to
+                  other users on the site. Your email, password, gender, and exact
+                  birthday will not be shared with anyone.
+                </Box>
+              </Typography>
             </Grid>
           </Grid>
           <Button

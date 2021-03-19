@@ -14,7 +14,6 @@ import { useHistory, Link, useLocation } from "react-router-dom";
 import { Link as PrettyLink } from "@material-ui/core";
 import { genders } from "../helpers/enum";
 import { SERVER_URL } from "../helpers/constants";
-import { formatDate } from "../helpers/dates";
 import Box from "@material-ui/core/Box";
 
 function useQuery() {
@@ -34,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  red: {
+    color: "red",
   },
 }));
 
@@ -63,6 +65,21 @@ export default function Signup() {
 
     if (password.value !== passwordConfirm.value) {
       return setError("Passwords do not match");
+    }
+
+    if (!first) {
+      setError("Please enter your first name.")
+      return
+    }
+
+    if (!last) {
+      setError("Please enter your last name.")
+      return
+    }
+
+    if (!birthday) {
+      setError("Please enter your birthday.")
+      return
     }
 
     try {
@@ -99,7 +116,7 @@ export default function Signup() {
           });
       });
     } catch (e) {
-      setError("Failed to create an account");
+      setError(e.message ? e.message : "An unknown error occured.");
       setLoading(false);
       return;
     }
@@ -144,7 +161,6 @@ export default function Signup() {
                 label="Birthday"
                 name="birthday"
                 type="date"
-                defaultValue={formatDate(new Date())}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
@@ -207,12 +223,20 @@ export default function Signup() {
             <Grid item xs={12}>
               <Typography>
                 <Box fontStyle="italic" fontWeight="fontWeightLight">
-                  *Privacy Note: Your name, age, and gender will be visible to
-                  other users on the site. Your email, password, and exact
+                  *Privacy Note: Your name and age will be visible to
+                  other users on the site. Your email, password, gender, and exact
                   birthday will not be shared with anyone.
                 </Box>
               </Typography>
             </Grid>
+            {error &&
+            <Grid item xs={12}>
+              <Typography className={classes.red}>
+                <Box fontWeight="fontWeightLight">
+                  *Error: {error}
+                </Box>
+              </Typography>
+            </Grid>}
           </Grid>
           <Button
             type="submit"

@@ -8,6 +8,7 @@ import { Link as PrettyLink } from "@material-ui/core";
 import EventCard from "./EventCard";
 import { useAuth } from "../contexts/AuthContext";
 import TeamRanks from "./TeamRanks";
+import { formatDate } from "../helpers/dates"
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -67,6 +68,14 @@ export default function Meet() {
     return newTeams;
   }
 
+  function getIsCurrent() {
+    const start = meetData.startDate
+    const end = meetData.endDate
+    const now = formatDate(new Date())
+    console.log(start, end, now)
+    return start <= now && end >= now
+  }
+
   return (
     <div>
       {meetData && (
@@ -105,6 +114,7 @@ export default function Meet() {
                 <div id={event.id}>
                   <div style={{ height: 25 }}></div>
                   <EventCard
+                    isCurrent={getIsCurrent()}
                     updateEntries={updateEntries}
                     event={event}
                     invitedTeams={meetData.invitedTeams}

@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: 5,
   },
+  delete_button: {
+    backgroundColor: "red",
+    color: "white",
+    margin: 5,
+  },
   title: {
     margin: 10,
   },
@@ -61,6 +66,27 @@ export default function Meets() {
       });
   });
 
+  function deleteMeet(meetId) {
+    if (window.confirm('Are you sure you want to delete this meet? This action cannot be undone!')) {
+      fetch(`${SERVER_URL}/meets/deleteMeet`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
+          sessionid: getSession(),
+        },
+        body: JSON.stringify({
+          meetId
+        }),
+      }).then(() => {
+        let newMeets = [...meets]
+        newMeets = newMeets.filter(meet => meet.id !== meetId)
+        setMeets(newMeets)
+      })
+    }
+  }
+
   const classes = useStyles();
 
   return (
@@ -87,6 +113,7 @@ export default function Meets() {
                       {meet.name}
                     </Typography>
                     {team.captain && meet.host._path.segments[1] === team.team && (
+                      <div>
                       <Button
                         component="span"
                         className={classes.button}
@@ -99,6 +126,19 @@ export default function Meets() {
                       >
                         Edit
                       </Button>
+                      <Button
+                        component="span"
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteMeet(meet.id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      </div>
                     )}
                   </Toolbar>
                 </CardContent>
