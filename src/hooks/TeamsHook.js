@@ -5,9 +5,13 @@ import { SERVER_URL } from "../helpers/constants";
 const useTeams = () => {
   // 1
   const [teams, teamsSet] = React.useState([]);
+  const [loaded, setLoaded] = React.useState(false);
   const { getSession } = useAuth();
 
   React.useEffect(() => {
+    if (loaded) {
+      return
+    }
     async function fetchTeams() {
       const fullResponse = await fetch(`${SERVER_URL}/teams/teams`, {
         credentials: "include",
@@ -20,6 +24,7 @@ const useTeams = () => {
       });
       const responseJson = await fullResponse.json();
       teamsSet(responseJson);
+      setLoaded(true)
     }
 
     fetchTeams();
