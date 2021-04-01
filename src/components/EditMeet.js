@@ -378,7 +378,7 @@ export default function EditMeet() {
                   </caption>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Event Name</TableCell>
+                      <TableCell>Event Name (Remember to include Gender!)</TableCell>
                       <TableCell>Distance</TableCell>
                       <TableCell>Gender(s)</TableCell>
                     </TableRow>
