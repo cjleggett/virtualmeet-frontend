@@ -70,10 +70,8 @@ export default function Meet() {
 
   function getIsCurrent() {
     const start = meetData.startDate
-    const end = meetData.endDate
     const now = formatDate(new Date())
-    console.log(start, end, now)
-    return start <= now && end >= now
+    return start <= now
   }
 
   return (

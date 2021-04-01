@@ -8,11 +8,16 @@ import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddEntry from "./AddEntry";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EntriesTable from "./EntriesTable";
 import { reverseUnits } from "../helpers/enum";
 import useTeam from "../hooks/TeamHook"
+import { SERVER_URL } from "../helpers/constants";
+import { useAuth } from "../contexts/AuthContext";
+
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -58,7 +63,10 @@ export default function EventCard({ event, invitedTeams, updateEntries, isCurren
   const team = useTeam();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [open, setOpen] = useState(false);
+  const [deleteDisabled, setDeleteDisabled] = useState(false)
   const entries = event.entries;
+  const { getSession } = useAuth();
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -67,7 +75,41 @@ export default function EventCard({ event, invitedTeams, updateEntries, isCurren
   const handleClose = () => {
     setOpen(false);
     updateEntries();
+    setDeleteDisabled(false)
   };
+
+  const hasEntry = () => {
+    const user = JSON.parse(localStorage.getItem("userData"))
+    for (const entry of entries) {
+      if (entry.user.first === user.first && entry.user.last === user.last) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const deleteTime = () => {
+    setDeleteDisabled(true)
+    const user = JSON.parse(localStorage.getItem("userData"))
+    for (const entry of entries) {
+      if (entry.user.first === user.first && entry.user.last === user.last) {
+        fetch(`${SERVER_URL}/entries/deleteEntry`, {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            sessionid: getSession(),
+          },
+          body: JSON.stringify({
+            entryId: entry.id
+          }),
+        }).then(() => {
+          updateEntries()
+        })
+      }
+    }
+  }
 
   function getModalStyle() {
     const top = 50;
@@ -89,15 +131,29 @@ export default function EventCard({ event, invitedTeams, updateEntries, isCurren
               {event.name}
             </Typography>
             { invitedTeams[team.team] && isCurrent &&
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                startIcon={<AddIcon />}
-                onClick={handleOpen}
-              >
-                Add My Time
-              </Button>
+              <div>
+                { hasEntry() && 
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    startIcon={<DeleteIcon />}
+                    onClick={deleteTime}
+                    disabled={deleteDisabled}
+                  >
+                    Delete My Time
+                  </Button>
+                }
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  startIcon={<AddIcon />}
+                  onClick={handleOpen}
+                >
+                  Add My Time
+                </Button>
+              </div>
             }
           </Toolbar>
           <Typography className={classes.eventInfo} variant="h6">
